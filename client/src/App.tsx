@@ -1,34 +1,41 @@
-import { useEffect, useState } from "react";
 import { Container, Typography, Box } from "@mui/material";
+import { QnAPage } from "./pages/QnAPage";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { LoginPage } from "./pages/LoginPage";
+import { DashboardPage } from "./pages/DashboardPage";
 
-interface Question {
-  _id: string;
-  text: string;
-  options: string[];
-  correctIndex: number;
-}
+const darkTheme = createTheme({
+  palette: {
+    mode: "light",
+  },
+});
 
 function App() {
-  const [questions, setQuestions] = useState<Question[]>([]);
-
-  useEffect(() => {
-    fetch("http://localhost:3000/api/quiz/questions")
-      .then((res) => res.json())
-      .then(setQuestions)
-      .catch((err) => console.error("Failed to fetch questions", err));
-  }, []);
-
   return (
-    <Container maxWidth="sm">
-      <Box mt={4}>
-        <Typography variant="h4" gutterBottom>
-          Quiz App
-        </Typography>
-        <Typography variant="body1">
-          Questions loaded: {questions.length}
-        </Typography>
-      </Box>
-    </Container>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Container maxWidth="sm">
+          <Box mt={4}>
+            <Typography variant="h4" gutterBottom>
+              Quiz App
+            </Typography>
+            <nav className="navbar">
+              <Link to="/login">Login</Link>
+              <Link to="/dashboard">Dashboard</Link>
+              <Link to="/test">Test</Link>
+            </nav>
+          </Box>
+        </Container>
+        <Routes>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="test" element={<QnAPage />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
